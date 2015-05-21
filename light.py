@@ -20,3 +20,4 @@ if __name__ == '__main__':
 	light_on()
 	time.sleep(2)
 	light_off()
+	GPIO.cleanup()
