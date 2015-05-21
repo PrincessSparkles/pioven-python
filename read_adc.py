@@ -4,7 +4,7 @@ import time
 import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BCM)
-DEBUG = 2
+DEBUG = 0
 
 # read SPI data from MCP3001 chip, 8 possible ADCs (0-7)
 def read_adc(adc_num, clock_pin, mosi_pin, miso_pin, cs_pin):
