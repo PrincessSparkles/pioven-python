@@ -13,18 +13,27 @@ import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)
 
 class LED:
+    # initialise
+    # remember the pin number, and configure the pin to be an output pin
     def __init__(self, pin):
         self.pin = pin 
         GPIO.setup(pin, GPIO.OUT)
 
+    # text representation for debugging
     def __repr__(self):
         return "LED(pin=%d)" % self.pin
 
+    # switch the LED on
     def on(self):
         GPIO.output(self.pin, True)
 
+    # turn the LED off
     def off(self):
         GPIO.output(self.pin, False)
+
+##############################################################################
+
+# test code
 
 import sys
 import time
@@ -45,3 +54,4 @@ def main(argv):
 if __name__ == '__main__':
     main(sys.argv)
     GPIO.cleanup()
+
