@@ -3,6 +3,7 @@
 # MCP3008.py
 #
 # Provides an interface (and test code) to the MCP3008 chip
+# This chip is an 8 channel, 10-bit ADC with SPI interface
 #
 # 25-05-2015
 #
