@@ -17,12 +17,19 @@ import MCP3008 as mcp3008
 
 #-----------------------------------------------------------------------------
 
+__verbose = 2
+
+#-----------------------------------------------------------------------------
+
 # load the JSON file with the configuaration
 def load_config(config_file):
     with open(config_file, "r") as f:
         data = json.load(f)
 
-    print json.dumps(data, indent=4, separators=(',', ': '))
+    if __verbose > 0:
+        print "--[Config loaded]--"
+        print json.dumps(data, indent=4, separators=(',', ': '))
+    
     return data
 
 #-----------------------------------------------------------------------------
@@ -38,7 +45,9 @@ def create_serial_port(config):
     ser = serial.Serial(port=port, baudrate=baud, timeout=timeout, 
                             xonxoff=xonxoff, rtscts=rtscts, dsrdtr=dsrdtr)
 
-    print ser
+    if __verbose > 1:
+        print "--[Serial port]--"
+        print ser
 
     return ser
 
@@ -47,7 +56,9 @@ def create_serial_port(config):
 def create_heater(config):
     heater = led.LED(config['led'])
 
-    print heater
+    if __verbose > 1:
+        print "--[Heater]--"
+        print heater
 
     return heater
 
@@ -64,14 +75,16 @@ def create_temperature_sensor(config):
     temp = mcp3008.MCP3008(clk, mosi, miso, cs)
     temp.set_default_adc(adc)
 
-    print temp
+    if __verbose > 1:
+        print "--[Temperature Sensor]--"
+        print temp
 
     return temp
 
 #-----------------------------------------------------------------------------
 
 def main(argv):
-    print "PiOven v0.2.0.1"
+    print "PiOven v0.2.1.2"
 
     config_file = "pioven.json"
     if len(argv) > 1:
