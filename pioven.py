@@ -53,8 +53,25 @@ def create_heater(config):
 
 #-----------------------------------------------------------------------------
 
+def create_temperature_sensor(config):
+    clk = config['clk']
+    mosi = config['mosi']
+    miso = config['miso']
+    cs = config['cs']
+
+    adc = config['adc']
+
+    temp = mcp3008.MCP3008(clk, mosi, miso, cs)
+    temp.set_default_adc(adc)
+
+    print temp
+
+    return temp
+
+#-----------------------------------------------------------------------------
+
 def main(argv):
-    print "PiOven v0.1.2.1"
+    print "PiOven v0.2.0.1"
 
     config_file = "pioven.json"
     if len(argv) > 1:
@@ -63,8 +80,14 @@ def main(argv):
     config = load_config(config_file)
 
     port = create_serial_port(config['serial'])
-    heater = create_heater(config['heater'])
-
+    try:
+        heater = create_heater(config['heater'])
+        temp = create_temperature_sensor(config['temperature_sensor'])
+    except KeyboardInterrupt:
+        pass
+    finally:
+        port.close()
+        GPIO.cleanup()
     
 
 

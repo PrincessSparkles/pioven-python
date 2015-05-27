@@ -2,10 +2,10 @@
     "heater": {
         "led": 18
     },
-    "temperature": {
+    "temperature_sensor": {
         "clk": 22,
         "miso": 27,
-        "mosi": 22,
+        "mosi": 17,
         "cs": 4,
         "adc": 0
     },

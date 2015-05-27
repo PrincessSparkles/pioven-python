@@ -20,6 +20,7 @@ class MCP3008:
         self.mosi = mosi
         self.miso = miso
         self.cs = cs
+        self.default_adc = 0
 
         GPIO.setup(self.clk, GPIO.OUT)
         GPIO.setup(self.mosi, GPIO.OUT)
@@ -31,10 +32,18 @@ class MCP3008:
         return "MCP3008(clk=%d, mosi=%d, miso=%d, cs=%d)" % \
                             (self.clk, self.mosi, self.miso, self.cs)
 
+    # setup a default adc to read from
+    def set_default_adc(self, adc):
+        if (adc >= 0 and adc <= 7):
+            self.default_adc = adc
+
     # read the 10-bit value from specified ADC
     # use SPI to talk to the chip
-    def read_adc(self, adc):
-        if (adc < 0 or adc > 7):
+    def read_adc(self, adc=-1):
+        if adc == -1:
+            adc = self.default_adc
+
+        if adc < 0 or adc > 7:
             # invalid adc number
             return -1
 
