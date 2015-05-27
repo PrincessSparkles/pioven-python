@@ -17,7 +17,7 @@ import MCP3008 as mcp3008
 
 #-----------------------------------------------------------------------------
 
-__verbose = 2
+__verbose = 1
 
 #-----------------------------------------------------------------------------
 
@@ -84,7 +84,7 @@ def create_temperature_sensor(config):
 #-----------------------------------------------------------------------------
 
 def main(argv):
-    print "PiOven v0.3.1.2"
+    print "PiOven v0.3.1.3"
 
     config_file = "pioven.json"
     if len(argv) > 1:
@@ -103,13 +103,21 @@ def main(argv):
             if len(cmd) == 1:
                 if cmd[0] == 'h':
                     # make it hot
+                    if __verbose > 0:
+                        print "[+] Heater on"
                     heater.on()
                 elif cmd[0] == 'c':
+                    if __verbose > 0:
+                        print "[+] Heater off"
                     # make it cold
                     heater.off()
                 elif cmd[0] == '?':
                     # query what the current temperature is
+                    if __verbose > 0:
+                        print "[+] Query temperature"
                     temp = temp_sensor.read_adc()
+                    if __verbose > 0:
+                        print "[+] Temperature={:03x}".format(temp)
                     port.write("{:03x}".format(temp))
 
     except KeyboardInterrupt:
