@@ -1,0 +1,20 @@
+{
+    "heater": {
+        "led": 18
+    },
+    "temperature": {
+        "clk": 22,
+        "miso": 27,
+        "mosi": 22,
+        "cs": 4,
+        "adc": 0
+    },
+    "serial": {
+        "port": "/dev/ttyATA0",
+        "baud": 115200,
+        "timeout": 1,
+        "xonxoff": true,
+        "rtscts": false,
+        "dsrdtr": false
+    }
+}
