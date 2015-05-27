@@ -84,7 +84,7 @@ def create_temperature_sensor(config):
 #-----------------------------------------------------------------------------
 
 def main(argv):
-    print "PiOven v0.2.1.2"
+    print "PiOven v0.3.1.2"
 
     config_file = "pioven.json"
     if len(argv) > 1:
@@ -95,10 +95,27 @@ def main(argv):
     port = create_serial_port(config['serial'])
     try:
         heater = create_heater(config['heater'])
-        temp = create_temperature_sensor(config['temperature_sensor'])
+        temp_sensor = create_temperature_sensor(config['temperature_sensor'])
+
+        while True:
+            cmd = port.read()
+
+            if len(cmd) == 1:
+                if cmd[0] == 'h':
+                    # make it hot
+                    heater.on()
+                elif cmd[0] == 'c':
+                    # make it cold
+                    heater.off()
+                elif cmd[0] == '?':
+                    # query what the current temperature is
+                    temp = temp_sensor.read_adc()
+                    port.write("{:03x}".format(temp))
+
     except KeyboardInterrupt:
         pass
     finally:
+        print ""        # tidy-up the output
         port.close()
         GPIO.cleanup()
     
