@@ -10,7 +10,7 @@
         "adc": 0
     },
     "serial": {
-        "port": "/dev/ttyATA0",
+        "port": "/dev/ttyAMA0",
         "baud": 115200,
         "timeout": 1,
         "xonxoff": true,
