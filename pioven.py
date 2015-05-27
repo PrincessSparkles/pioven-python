@@ -12,8 +12,8 @@ import json
 import serial
 import RPi.GPIO as GPIO     # needed for GPIO.cleanup()
 
-import LED
-import MCP3008
+import LED as led
+import MCP3008 as mcp3008
 
 #-----------------------------------------------------------------------------
 
@@ -44,8 +44,17 @@ def create_serial_port(config):
 
 #-----------------------------------------------------------------------------
 
+def create_heater(config):
+    heater = led.LED(config['led'])
+
+    print heater
+
+    return heater
+
+#-----------------------------------------------------------------------------
+
 def main(argv):
-    print "PiOven v0.1.1.1"
+    print "PiOven v0.1.2.1"
 
     config_file = "pioven.json"
     if len(argv) > 1:
@@ -54,6 +63,7 @@ def main(argv):
     config = load_config(config_file)
 
     port = create_serial_port(config['serial'])
+    heater = create_heater(config['heater'])
 
     
 
