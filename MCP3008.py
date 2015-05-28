@@ -8,104 +8,53 @@
 # 25-05-2015
 #
 
-import RPi.GPIO as GPIO
-
-GPIO.setmode(GPIO.BCM)
+import spidev
 
 class MCP3008:
     # initialise
-    # remember the parameters, and configure the pins
-    def __init__(self, clk, mosi, miso, cs):
-        self.clk = clk
-        self.mosi = mosi
-        self.miso = miso
-        self.cs = cs
-        self.default_adc = 0
-
-        GPIO.setup(self.clk, GPIO.OUT)
-        GPIO.setup(self.mosi, GPIO.OUT)
-        GPIO.setup(self.miso, GPIO.IN)
-        GPIO.setup(self.cs, GPIO.OUT)
+    def __init__(self):
+        self.default_channel = 0
+        self.spi = spidev.SpiDev()
+        self.spi.open(0, 0)
 
     # string representation of the MCP3008 - used for debugging
     def __repr__(self):
-        return "MCP3008(clk=%d, mosi=%d, miso=%d, cs=%d)" % \
-                            (self.clk, self.mosi, self.miso, self.cs)
+        return "MCP3008()"
 
-    # setup a default adc to read from
-    def set_default_adc(self, adc):
-        if (adc >= 0 and adc <= 7):
-            self.default_adc = adc
+    # setup a default channel to read from
+    def set_default_channel(self, channel):
+        if (channel >= 0 and channel <= 7):
+            self.default_channel = channel
 
-    # read the 10-bit value from specified ADC
-    # use SPI to talk to the chip
-    def read_adc(self, adc=-1):
-        if adc == -1:
-            adc = self.default_adc
+    # read the 10-bit value from specified channel
+    # code taken from http://www.raspberrypi-spy.co.uk/2013/10/analogue-sensors-on-the-raspberry-pi-using-an-mcp3008/
+    def read_channel(self, channel=-1):
+        if channel == -1:
+            channel = self.default_channel
 
-        if adc < 0 or adc > 7:
-            # invalid adc number
-            return -1
+        adc = self.spi.xfer2([1, (0x08 + channel) << 4, 0])
+        data = ((adc[1] & 0x03) << 8) + adc[2]
 
-        GPIO.output(self.cs, True)
+        return data
 
-        GPIO.output(self.clk, False)
-        GPIO.output(self.cs, False)
-
-        cmd = adc
-        cmd |= 0x18     # start bit and single-ended bit
-        cmd <<= 3       # we only need to send 5 bits
-
-        for i in range(5):
-            if cmd & 0x80:
-                GPIO.output(self.mosi, True)
-            else:
-                GPIO.output(self.mosi, False)
-
-            cmd <<= 1
-            GPIO.output(self.clk, True)
-            GPIO.output(self.clk, False)
-
-        out = 0
-
-        # read one empty bit, 10 data bits and 1 null bit
-        for i in range(12):
-            GPIO.output(self.clk, True)
-            GPIO.output(self.clk, False)
-
-            out <<= 1
-
-            if GPIO.input(self.miso):
-                out |= 0x01
-
-        GPIO.output(self.cs, True)
-
-        out >>= 1           # drop the last bit (null or empty)
-        return out
-        
 ##############################################################################
 
 import time
 
-test_clk = 22
-test_mosi = 17
-test_miso = 27
-test_cs = 4
-test_adc = 0
-
 def main():
-    mcp = MCP3008(test_clk, test_mosi, test_miso, test_cs)
+    mcp = MCP3008()
 
     print "[+] outputting mcp"
     print mcp
 
     last_read = -100
     tolerance = 5
+    test_channel = 0
 
-    print "[+] reading values from adc in a loop - please turn the knob"
+    print "[+] reading values from channel in a loop - please turn the knob"
     print "[+] pres Ctrl-C when done"
     while True:
-        val = mcp.read_adc(test_adc)
+        val = mcp.read_channel(test_channel)
 
         if abs(val - last_read) > tolerance:
             percent = val / 10.24
@@ -120,5 +69,4 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         pass
     finally:
-        GPIO.cleanup()
-
+        pass
