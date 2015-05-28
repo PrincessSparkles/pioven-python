@@ -65,15 +65,10 @@ def create_heater(config):
 #-----------------------------------------------------------------------------
 
 def create_temperature_sensor(config):
-    clk = config['clk']
-    mosi = config['mosi']
-    miso = config['miso']
-    cs = config['cs']
+    channel = config['channel']
 
-    adc = config['adc']
-
-    temp = mcp3008.MCP3008(clk, mosi, miso, cs)
-    temp.set_default_adc(adc)
+    temp = mcp3008.MCP3008()
+    temp.set_default_channel(channel)
 
     if __verbose > 1:
         print "--[Temperature Sensor]--"
@@ -84,7 +79,7 @@ def create_temperature_sensor(config):
 #-----------------------------------------------------------------------------
 
 def main(argv):
-    version = "PiOven v0.3.1.4"
+    version = "PiOven v0.4.2.0"
     print version
 
     config_file = "pioven.json"
@@ -111,22 +106,23 @@ def main(argv):
                         print "[+] Heater on"
                     heater.on()
                 elif cmd[0] == 'c':
+                    # make it cold
                     if __verbose > 0:
                         print "[+] Heater off"
-                    # make it cold
                     heater.off()
                 elif cmd[0] == '?':
                     # query what the current temperature is
                     if __verbose > 0:
                         print "[+] Query temperature"
-                    temp = temp_sensor.read_adc()
+                    temp = temp_sensor.read_channel()
                     if __verbose > 0:
                         print "[+] Temperature={:03x}".format(temp)
-                    port.write("{:03x}".format(temp))
+                    port.write("{:03x}\n".format(temp))
                 elif cmd[0] == 'v':
+                    # get version
                     if __verbose > 0:
                         print "[+] Version {}".format(version)
-                    port.write("\n{}\n".format(version))
+                    port.write("{}\n".format(version))
 
     except KeyboardInterrupt:
         pass

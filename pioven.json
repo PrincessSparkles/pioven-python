@@ -3,11 +3,7 @@
         "led": 18
     },
     "temperature_sensor": {
-        "clk": 22,
-        "miso": 27,
-        "mosi": 17,
-        "cs": 4,
-        "adc": 0
+        "channel": 0
     },
     "serial": {
         "port": "/dev/ttyAMA0",
