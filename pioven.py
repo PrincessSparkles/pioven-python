@@ -104,12 +104,12 @@ def main(argv):
                     # make it hot
                     if __verbose > 0:
                         print "[+] Heater on"
-                    heater.on()
+                    heater.turn_on()
                 elif cmd[0] == 'c':
                     # make it cold
                     if __verbose > 0:
                         print "[+] Heater off"
-                    heater.off()
+                    heater.turn_off()
                 elif cmd[0] == '?':
                     # query what the current temperature is
                     if __verbose > 0:

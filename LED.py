@@ -24,11 +24,11 @@ class LED:
         return "LED(pin=%d)" % self.pin
 
     # switch the LED on
-    def on(self):
+    def turn_on(self):
         GPIO.output(self.pin, True)
 
     # turn the LED off
-    def off(self):
+    def turn_off(self):
         GPIO.output(self.pin, False)
 
 ##############################################################################
@@ -47,9 +47,9 @@ def main(argv):
     print led
 
     print "[+] the selected LED should now come on for two seconds"
-    led.on()
+    led.turn_on()
     time.sleep(2)
-    led.off()
+    led.turn_off()
 
 if __name__ == '__main__':
     main(sys.argv)
