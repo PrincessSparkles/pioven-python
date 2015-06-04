@@ -1,6 +1,6 @@
 {
     "heater": {
-        "led": 18
+        "pin": 18
     },
     "temperature_sensor": {
         "channel": 0
